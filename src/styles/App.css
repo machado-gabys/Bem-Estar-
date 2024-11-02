@@ -1,0 +1,74 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5; /* Cor de fundo suave */
+}
+
+h2 {
+  color: #6a0dad; /* Cor roxa */
+  text-align: center;
+}
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin: 20px 0; /* Margem para separar do conteúdo acima */
+}
+
+.day {
+  border: 1px solid #6a0dad; /* Borda roxa */
+  background-color: white; /* Fundo branco para os dias */
+  padding: 20px; /* Aumentar padding para um espaço mais agradável */
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px; /* Bordas arredondadas */
+  transition: background-color 0.3s; /* Transição suave para o efeito hover */
+}
+
+.day:hover {
+  background-color: #e6d7f2; /* Cor de fundo ao passar o mouse */
+}
+
+.note-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff; /* Fundo branco */
+  padding: 20px;
+  border: 1px solid #6a0dad; /* Borda roxa */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.note-modal h3 {
+  margin-top: 0;
+  color: #6a0dad; /* Título em roxo */
+}
+
+.note-modal textarea {
+  width: 100%;
+  height: 80px; /* Altura fixa para a área de texto */
+  margin-bottom: 10px;
+  border: 1px solid #ccc; /* Borda leve */
+  border-radius: 5px; /* Bordas arredondadas */
+  padding: 10px; /* Padding interno */
+  resize: none; /* Impede o redimensionamento */
+}
+
+.note-modal button {
+  background-color: #6a0dad; /* Botão roxo */
+  color: white; /* Texto branco */
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Transição suave */
+}
+
+.note-modal button:hover {
+  background-color: #5b0c95; /* Cor do botão ao passar o mouse */
+}
