@@ -1,67 +1,93 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import '../styles/App.css';
 
 const Calendar = () => {
-    const [selectedDay, setSelectedDay] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
     const [note, setNote] = useState('');
-    const [notes, setNotes] = useState({}); // Armazena notas por dia
+    const [patientName, setPatientName] = useState('');
+    const [notes, setNotes] = useState({});
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        // Carregar notas do localStorage ao iniciar o componente
-        const storedNotes = JSON.parse(localStorage.getItem('notes'));
-        if (storedNotes) {
-            setNotes(storedNotes);
-        }
-        createCalendar();
-    }, []);
-
-    const createCalendar = () => {
-        const calendar = document.getElementById("calendar");
-        calendar.innerHTML = ''; // Limpa o calendário existente
-
-        for (let day = 1; day <= 31; day++) {
-            const dayContainer = document.createElement("div");
-            dayContainer.classList.add("day");
-            dayContainer.textContent = `Dia ${day}`;
-            dayContainer.onclick = () => handleDayClick(day);
-            calendar.appendChild(dayContainer);
-        }
+    const handleDayClick = (date) => {
+        setSelectedDate(date);
+        setIsModalOpen(true); // Abre o modal ao clicar em um dia
     };
 
-    const handleDayClick = (day) => {
-        setSelectedDay(day);
-        setNote(notes[day] || ''); // Carrega a nota existente, se houver
-    };
-
-    const handleSaveNote = () => {
-        if (selectedDay) {
-            const updatedNotes = {
-                ...notes,
-                [selectedDay]: note,
+    const handleAddNote = (e) => {
+        e.preventDefault();
+        if (selectedDate && patientName && note) {
+            const newNote = {
+                patient: patientName,
+                note,
+                date: selectedDate,
             };
-            setNotes(updatedNotes);
-            localStorage.setItem('notes', JSON.stringify(updatedNotes)); // Salva as notas no localStorage
-            console.log(`Nota salva para o dia ${selectedDay}: ${note}`); // Log para depuração
-            setSelectedDay(null); // Fecha o campo de nota
-            setNote(''); // Limpa o campo de nota
-            createCalendar(); // Atualiza o calendário para refletir as mudanças
+
+            setNotes((prevNotes) => ({
+                ...prevNotes,
+                [selectedDate]: [...(prevNotes[selectedDate] || []), newNote],
+            }));
+
+            setNote('');
+            setPatientName('');
+            setIsModalOpen(false); // Fecha o modal após adicionar a nota
+            alert('Nota adicionada com sucesso!');
+        } else {
+            alert('Por favor, preencha todos os campos.');
         }
+    };
+
+    const renderDays = () => {
+        const days = [];
+        for (let day = 1; day <= 30; day++) {
+            const date = `${day}/11/2024`; // Exemplo de data
+            days.push(
+                <div 
+                    key={day} 
+                    className="day" 
+                    onClick={() => handleDayClick(date)}
+                >
+                    {day}
+                </div>
+            );
+        }
+        return days;
     };
 
     return (
         <div>
-            <div id="calendar" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px' }}></div>
+            <h2>Calendário</h2>
+            <div id="calendar">{renderDays()}</div>
 
-            {selectedDay && (
-                <div className="note-modal">
-                    <h3>Notas para o Dia {selectedDay}</h3>
-                    <textarea
-                        value={note}
-                        onChange={(e) => setNote(e.target.value)}
-                        rows={4}
-                        placeholder="Digite sua anotação aqui..."
-                    />
-                    <button onClick={handleSaveNote}>Salvar Nota</button>
-                    <button onClick={() => setSelectedDay(null)}>Fechar</button>
+            {isModalOpen && (
+                <div className="modal-overlay">
+                    <div className="note-modal">
+                        <h3>Adicionar Anotação para {selectedDate}</h3>
+                        <input 
+                            type="text" 
+                            placeholder="Nome do Paciente" 
+                            value={patientName} 
+                            onChange={(e) => setPatientName(e.target.value)} 
+                            required
+                        />
+                        <textarea 
+                            placeholder="Escreva sua nota aqui..." 
+                            value={note} 
+                            onChange={(e) => setNote(e.target.value)} 
+                            required
+                        />
+                        <button onClick={handleAddNote}>Adicionar Nota</button>
+                        <button onClick={() => setIsModalOpen(false)}>Fechar</button>
+
+                        {/* Exibir notas anteriores para esta data */}
+                        <h4>Notas Anteriores</h4>
+                        <ul>
+                            {(notes[selectedDate] || []).map((item, index) => (
+                                <li key={index}>
+                                    <strong>{item.patient}</strong> - {item.note}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             )}
         </div>
