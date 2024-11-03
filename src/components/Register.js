@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Importar useNavigate e Link
+import { Link, useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const Register = ({ onRegister }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [userType, setUserType] = useState('paciente');
-
-    const navigate = useNavigate(); // Usar o hook useNavigate
+    const navigate = useNavigate();
 
     const handleRegister = (e) => {
         e.preventDefault();
-        // Aqui você pode adicionar a lógica para salvar o usuário (por exemplo, no localStorage ou em um backend)
-        console.log({ username, password, userType });
+
+        // Verifica se as senhas coincidem
+        if (password !== confirmPassword) {
+            alert('As senhas não coincidem. Por favor, tente novamente.');
+            return;
+        }
+
+        // Chama a função para adicionar o usuário
+        onRegister({ username, password, userType });
         alert('Cadastro realizado com sucesso!');
         
         // Redireciona para a página de login após o cadastro
-        navigate('/'); // Redireciona para a página de login
+        navigate('/');
     };
 
     return (
@@ -34,6 +41,12 @@ const Register = () => {
                         placeholder="Senha" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="Confirme a Senha" 
+                        value={confirmPassword} 
+                        onChange={(e) => setConfirmPassword(e.target.value)} 
                     />
                     <select value={userType} onChange={(e) => setUserType(e.target.value)}>
                         <option value="paciente">Paciente</option>

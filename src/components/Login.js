@@ -1,27 +1,22 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ users }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate(); // Usar o hook useNavigate
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
-        const users = JSON.parse(localStorage.getItem('users')) || [];
         
-        // Verifica se o usuário existe e se a senha está correta
-        const user = users.find(user => user.username === username && user.password === password);
-        
+        // Verifica se o usuário está cadastrado
+        const user = users.find((user) => user.username === username && user.password === password);
+
         if (user) {
-            // Redireciona com base no tipo de usuário
-            if (user.userType === 'psicologo') {
-                navigate('/psychologist'); // Redireciona para o menu do psicólogo
-            } else {
-                navigate('/home'); // Redireciona para o menu do paciente
-            }
+            // Redireciona para a home do usuário com o tipo de usuário no estado
+            navigate('/home', { state: { userType: user.userType } });
         } else {
-            alert('Usuário ou senha inválidos!');
+            alert('Usuário ou senha inválidos. Por favor, tente novamente.');
         }
     };
 
@@ -45,7 +40,7 @@ const Login = () => {
                     <button type="submit">Entrar</button>
                 </form>
                 <p>
-                    Não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+                    Não tem uma conta? <Link to="/cadastro">Cadastre-se aqui</Link>
                 </p>
             </div>
         </div>
