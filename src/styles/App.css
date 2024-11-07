@@ -228,4 +228,92 @@ h2 {
 
 .note-modal button:hover {
   background-color: #5b0c95; /* Cor do botão ao passar o mouse */
+
+}
+
+/* Estilos gerais da página de perfil */
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  text-align: center;
+  color: #6a0dad;
+}
+
+.profile-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.profile-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.profile-info label {
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.profile-info input,
+.profile-info select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.profile-info input:focus,
+.profile-info select:focus {
+  border-color: #6a0dad;
+  outline: none;
+}
+
+.gender-options {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.gender-options input[type="radio"] {
+  margin-right: 5px;
+}
+
+/* Botão para salvar as alterações */
+.profile-save-button {
+  background-color: #6a0dad;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  display: block;
+  margin: 20px auto 0;
+  text-align: center;
+  width: 100%;
+  max-width: 200px;
+}
+
+.profile-save-button:hover {
+  background-color: #5b0c95;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .profile-info {
+    grid-template-columns: 1fr;
+  }
 }
