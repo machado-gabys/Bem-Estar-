@@ -1,3 +1,4 @@
+// src/components/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -9,12 +10,15 @@ const Login = ({ users }) => {
     const handleLogin = (e) => {
         e.preventDefault();
         
-        // Verifica se o usuário está cadastrado
         const user = users.find((user) => user.username === username && user.password === password);
 
         if (user) {
-            // Redireciona para a home do usuário com o tipo de usuário no estado
-            navigate('/home', { state: { userType: user.userType } });
+            // Redireciona para a página adequada, baseada no tipo de usuário
+            if (user.userType === 'psicologo') {
+                navigate('/psychologist'); // Psicólogo
+            } else {
+                navigate('/home'); // Paciente
+            }
         } else {
             alert('Usuário ou senha inválidos. Por favor, tente novamente.');
         }

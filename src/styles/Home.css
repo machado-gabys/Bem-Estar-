@@ -1,3 +1,43 @@
+.home-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Menu começa escondido */
+    width: 250px;
+    height: 100%;
+    background-color: #6a4c8c; /* Cor de fundo roxa */
+    transition: left 0.3s ease; /* Animação suave para mostrar/esconder o menu */
+}
+
+.sidebar.visible {
+    left: 0; /* Menu aparece ao clicar no hambúrguer */
+}
+
+.content {
+    margin-left: 0;
+    transition: margin-left 0.3s ease; /* Animação suave quando o menu é aberto */
+    padding: 20px;
+    width: 100%;
+}
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.hamburger-icon .line {
+    height: 4px;
+    background-color: #000;
+}
+
 .calendar {
     display: flex;
     flex-direction: column;

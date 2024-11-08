@@ -1,95 +1,112 @@
+// src/components/Home.js
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
+import Sidebar from './Sidebar';
 
-const Home = () => {
-    const location = useLocation();
-    const userType = location.state?.userType; // Obtém o tipo de usuário do estado da navegação
+function Home() {
+    const [notes, setNotes] = useState({});
+    const [isSidebarVisible, setSidebarVisible] = useState(false);
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [currentDate, setCurrentDate] = useState('');
+    const [currentNote, setCurrentNote] = useState('');
 
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [patientName, setPatientName] = useState('');
-    const [notes, setNotes] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [annotations, setAnnotations] = useState({}); // Usar um objeto para armazenar anotações por data
+    const navigate = useNavigate();
 
-    const date = new Date();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysArray = [...Array(daysInMonth).keys()].map(i => i + 1);
-    const firstDay = new Date(year, month, 1).getDay();
-
-    const handleDayClick = (day) => {
-        setSelectedDate(day);
-        const dateKey = `${year}-${month + 1}-${day}`; // Formata a data como chave
-        const existingAnnotation = annotations[dateKey] || { patientName: '', notes: '' };
-        setPatientName(existingAnnotation.patientName);
-        setNotes(existingAnnotation.notes);
-        setIsModalOpen(true);
+    // Função para salvar anotações
+    const handleSaveNote = () => {
+        setNotes(prevNotes => ({
+            ...prevNotes,
+            [currentDate]: currentNote,
+        }));
+        setModalVisible(false);
     };
 
-    const handleSave = () => {
-        const dateKey = `${year}-${month + 1}-${selectedDate}`; // Formata a data como chave
-        setAnnotations({
-            ...annotations,
-            [dateKey]: {
-                patientName: userType === 'psicologo' ? patientName : null,
-                notes: notes,
-            },
-        });
-        console.log('Anotações salvas:', { ...annotations, [dateKey]: { patientName, notes } }); // Para verificar no console
-        setPatientName(''); // Limpa os campos após salvar
-        setNotes('');
-        setIsModalOpen(false);
+    const toggleSidebar = () => {
+        setSidebarVisible(!isSidebarVisible);
+    };
+
+    const showModal = (date) => {
+        setCurrentDate(date);
+        setCurrentNote(notes[date] || '');
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
+
+    // Função de logout que redireciona para a página de login
+    const handleLogout = () => {
+        navigate('/');
     };
 
     return (
-        <div>
-            <h2>{userType === 'psicologo' ? 'Calendário do Psicólogo' : 'Calendário do Paciente'}</h2>
-            <div className="calendar">
-                <div className="calendar-header">
-                    <div>Dom</div>
-                    <div>Seg</div>
-                    <div>Ter</div>
-                    <div>Qua</div>
-                    <div>Qui</div>
-                    <div>Sex</div>
-                    <div>Sab</div>
-                </div>
-                <div className="calendar-body">
-                    {Array(firstDay).fill(null).map((_, i) => <div key={`empty-${i}`} className="calendar-day empty"></div>)}
-                    {daysArray.map(day => (
-                        <div key={day} className="calendar-day" onClick={() => handleDayClick(day)}>
-                            {day}
-                        </div>
-                    ))}
-                </div>
+        <div className="home-container">
+            {/* Menu lateral (Sidebar) */}
+            <div className={`sidebar ${isSidebarVisible ? 'visible' : ''}`}>
+                <Sidebar onLogout={handleLogout} />
             </div>
 
-            {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="note-modal">
-                        <h3>Anotações para {selectedDate}</h3>
-                        {userType === 'psicologo' && (
-                            <input
-                                type="text"
-                                placeholder="Nome do Paciente"
-                                value={patientName}
-                                onChange={(e) => setPatientName(e.target.value)}
-                            />
-                        )}
-                        <textarea
-                            placeholder="Anotações"
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                        />
-                        <button onClick={handleSave}>Salvar</button>
-                        <button onClick={() => setIsModalOpen(false)}>Fechar</button>
+            <div className="content">
+                {/* Ícone do menu hambúrguer */}
+                <div className="hamburger-icon" onClick={toggleSidebar}>
+                    <span className="line"></span>
+                    <span className="line"></span>
+                    <span className="line"></span>
+                </div>
+
+                <h1>Bem-vindo à Home</h1>
+
+                <p>Aqui você pode ver o calendário e adicionar suas anotações.</p>
+
+                {/* Calendário */}
+                <div className="calendar">
+                    <div className="calendar-header">
+                        <div>Dom</div>
+                        <div>Seg</div>
+                        <div>Ter</div>
+                        <div>Qua</div>
+                        <div>Qui</div>
+                        <div>Sex</div>
+                        <div>Sáb</div>
+                    </div>
+                    <div className="calendar-body">
+                        {/* Simulação de dias (substituir com dados reais do calendário) */}
+                        {Array.from({ length: 30 }, (_, index) => {
+                            const day = index + 1;
+                            const date = `2024-11-${String(day).padStart(2, '0')}`;
+                            return (
+                                <div
+                                    key={date}
+                                    className={`calendar-day ${day % 7 === 0 ? 'empty' : ''}`}
+                                    onClick={() => showModal(date)} 
+                                >
+                                    {day}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
-            )}
+
+                {/* Modal de anotações */}
+                {isModalVisible && (
+                    <div className="modal-overlay" onClick={closeModal}>
+                        <div className="note-modal" onClick={(e) => e.stopPropagation()}>
+                            <h3>Adicionar Anotação</h3>
+                            <textarea
+                                value={currentNote}
+                                onChange={(e) => setCurrentNote(e.target.value)}
+                                placeholder="Digite sua anotação aqui..."
+                            />
+                            <button onClick={handleSaveNote}>Salvar</button>
+                            <button onClick={closeModal}>Fechar</button> {/* Botão para fechar o modal */}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
-};
+}
 
 export default Home;

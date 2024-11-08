@@ -1,0 +1,92 @@
+/* src/styles/Psychologist.css */
+
+.psychologist-container {
+    display: flex;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 220px; /* Espaço para o Sidebar */
+}
+
+.calendar {
+    margin-bottom: 20px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 dias da semana */
+    gap: 10px;
+}
+
+button {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #ddd;
+}
+
+.daily-notes {
+    margin-top: 20px;
+}
+
+.daily-notes-entry {
+    margin-bottom: 10px;
+}
+
+.daily-notes-entry ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.daily-notes-entry li {
+    margin-bottom: 5px;
+}
+
+/* Estilo do Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

@@ -1,20 +1,15 @@
-// src/components/Sidebar.js
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import '../styles/Sidebar.css'; // Importe o estilo do Sidebar
 
-function Sidebar() {
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        // Aqui você pode adicionar lógica para limpar dados de autenticação, se necessário
-        navigate('/'); // Redireciona para a página de login
-    };
-
+function Sidebar({ onLogout }) {
     return (
-        <div className="sidebar">
-            <h2>Menu</h2>
+        <div className="sidebar-content">
+            <h3>Menu</h3>
             <ul>
-                <button onClick={handleLogout}>Sair</button>
+                <li>
+                    <button onClick={onLogout} className="logout-button">Sair</button>
+                </li>
+                {/* Adicione mais opções de menu aqui, se necessário */}
             </ul>
         </div>
     );

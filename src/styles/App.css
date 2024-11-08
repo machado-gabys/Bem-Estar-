@@ -3,102 +3,97 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 20px;
-  background-color: #f5f5f5; /* Cor de fundo suave */
+  background-color: #f5f5f5;
 }
 
-/* Estilos para os cabeçalhos */
 h2 {
-  color: #6a0dad; /* Cor roxa */
+  color: #6a0dad;
   text-align: center;
 }
 
-/* Estilos para o calendário */
 #calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
-  margin: 20px 0; /* Margem para separar do conteúdo acima */
+  margin: 20px 0;
 }
 
 @media (max-width: 768px) {
   #calendar {
-    grid-template-columns: repeat(3, 1fr); /* Menos colunas em telas menores */
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .day {
-  border: 1px solid #6a0dad; /* Borda roxa */
-  background-color: white; /* Fundo branco para os dias */
-  padding: 20px; /* Aumentar padding para um espaço mais agradável */
+  border: 1px solid #6a0dad;
+  background-color: white;
+  padding: 20px;
   text-align: center;
   cursor: pointer;
-  border-radius: 5px; /* Bordas arredondadas */
-  transition: background-color 0.3s; /* Transição suave para o efeito hover */
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .day:hover {
-  background-color: #e6d7f2; /* Cor de fundo ao passar o mouse */
+  background-color: #e6d7f2;
 }
 
 .day:focus {
-  outline: 2px solid #6a0dad; /* Destaque para acessibilidade */
+  outline: 2px solid #6a0dad;
 }
 
-/* Estilos para modais de notas */
 .note-modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff; /* Fundo branco */
+  background: #fff;
   padding: 20px;
-  border: 1px solid #6a0dad; /* Borda roxa */
-  border-radius: 8px; /* Bordas arredondadas */
+  border: 1px solid #6a0dad;
+  border-radius: 8px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
 .note-modal h3 {
   margin-top: 0;
-  color: #6a0dad; /* Título em roxo */
+  color: #6a0dad;
 }
 
 .note-modal textarea {
   width: 100%;
-  height: 80px; /* Altura fixa para a área de texto */
+  height: 80px;
   margin-bottom: 10px;
-  border: 1px solid #ccc; /* Borda leve */
-  border-radius: 5px; /* Bordas arredondadas */
-  padding: 10px; /* Padding interno */
-  resize: none; /* Impede o redimensionamento */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  resize: none;
 }
 
 .note-modal button {
-  background-color: #6a0dad; /* Botão roxo */
-  color: white; /* Texto branco */
+  background-color: #6a0dad;
+  color: white;
   border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s; /* Transição suave */
+  transition: background-color 0.3s;
 }
 
 .note-modal button:hover {
-  background-color: #5b0c95; /* Cor do botão ao passar o mouse */
+  background-color: #5b0c95;
 }
 
-/* Estilos para sobreposições de modais */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Escurece o fundo */
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 500;
 }
 
-/* Estilos gerais para as páginas de autenticação */
 .auth-container {
   display: flex;
   justify-content: center;
@@ -114,15 +109,15 @@ h2 {
   width: 100%;
   max-width: 400px;
   text-align: center;
-  transition: transform 0.2s; /* Efeito de hover */
+  transition: transform 0.2s;
 }
 
 .auth-card:hover {
-  transform: translateY(-5px); /* Levantar card ao passar o mouse */
+  transform: translateY(-5px);
 }
 
 .auth-card h2 {
-  color: #6a0dad; /* Cor roxa */
+  color: #6a0dad;
   margin-bottom: 20px;
 }
 
@@ -141,12 +136,12 @@ h2 {
 }
 
 .auth-card input:focus {
-  border-color: #6a0dad; /* Mudança de cor ao focar no campo */
-  outline: none; /* Remove o contorno padrão */
+  border-color: #6a0dad;
+  outline: none;
 }
 
 .auth-card button {
-  background-color: #6a0dad; /* Cor do botão roxo */
+  background-color: #6a0dad;
   color: #fff;
   border: none;
   padding: 12px;
@@ -158,23 +153,23 @@ h2 {
 }
 
 .auth-card button:hover {
-  background-color: #5b0c95; /* Tom mais escuro de roxo ao passar o mouse */
-  transform: translateY(-2px); /* Leve movimento para cima ao passar o mouse */
+  background-color: #5b0c95;
+  transform: translateY(-2px);
 }
 
 .auth-link {
   margin-top: 15px;
-  color: #6a0dad; /* Cor roxa */
+  color: #6a0dad;
   text-decoration: none;
   font-size: 14px;
 }
 
 .auth-link:hover {
-  text-decoration: underline; /* Sublinhado ao passar o mouse */
+  text-decoration: underline;
 }
 
 .auth-card p {
-  color: #666; /* Cor do texto para o link de login */
+  color: #666;
   font-size: 14px;
 }
 
@@ -184,8 +179,8 @@ h2 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Escurece o fundo */
-  z-index: 500; /* Para estar acima de outros elementos */
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 500;
 }
 
 .note-modal {
@@ -193,45 +188,44 @@ h2 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff; /* Fundo branco */
+  background: #fff;
   padding: 20px;
-  border: 1px solid #6a0dad; /* Borda roxa */
-  border-radius: 8px; /* Bordas arredondadas */
+  border: 1px solid #6a0dad;
+  border-radius: 8px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
 .note-modal h3 {
   margin-top: 0;
-  color: #6a0dad; /* Título em roxo */
+  color: #6a0dad;
 }
 
 .note-modal input,
 .note-modal textarea {
-  width: 100%; /* Largura total */
+  width: 100%;
   margin-top: 10px;
   padding: 10px;
-  border-radius: 5px; /* Bordas arredondadas */
-  border: 1px solid #ccc; /* Borda leve */
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 .note-modal button {
   margin-top: 10px;
-  background-color: #6a0dad; /* Cor do botão */
-  color: white; /* Texto branco */
+  background-color: #6a0dad;
+  color: white;
   border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s; /* Transição suave */
+  transition: background-color 0.3s;
 }
 
 .note-modal button:hover {
-  background-color: #5b0c95; /* Cor do botão ao passar o mouse */
+  background-color: #5b0c95;
 
 }
 
-/* Estilos gerais da página de perfil */
 .profile-container {
   max-width: 800px;
   margin: 0 auto;
@@ -290,7 +284,6 @@ h2 {
   margin-right: 5px;
 }
 
-/* Botão para salvar as alterações */
 .profile-save-button {
   background-color: #6a0dad;
   color: #fff;
