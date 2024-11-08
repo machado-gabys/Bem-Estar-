@@ -1,49 +1,39 @@
-/* Estilo do menu lateral (Sidebar) */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: -250px; /* Inicialmente escondido */
+/* Sidebar Container */
+.sidebar-container {
     width: 250px;
     height: 100%;
-    background-color: #9b59b6; /* Roxo mais claro */
-    transition: left 0.3s ease-in-out;
-    z-index: 1000;
-}
-
-.sidebar.visible {
-    left: 0; /* Quando o menu está visível */
-}
-
-.sidebar-content {
+    background-color: #6a1b9a;
+    color: white;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .sidebar-item {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
     color: white;
-}
-
-.sidebar h3 {
-    margin-top: 0;
-    font-size: 24px;
-}
-
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar li {
-    margin-bottom: 15px;
-}
-
-.logout-button {
-    background-color: #8e44ad; /* Roxo mais escuro */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
     border-radius: 5px;
-}
-
-.logout-button:hover {
-    background-color: #732d91; /* Tom mais escuro quando o botão é focado */
-}
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar-link:hover {
+    background-color: #9c4dcc;
+  }
+  
+  /* Ícones */
+  .sidebar-icon {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+  

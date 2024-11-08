@@ -23,79 +23,79 @@ function Profile() {
     <div className="profile-container">
       <h2>Perfil</h2>
       <div className="profile-info">
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nome Completo:</label>
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Telefone:</label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Cidade:</label>
-          <input
-            type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Gênero:</label>
+        <form onSubmit={handleSubmit}>
           <div>
+            <label>Nome Completo:</label>
             <input
-              type="radio"
-              id="masculino"
-              value="Masculino"
-              checked={gender === "Masculino"}
-              onChange={(e) => setGender(e.target.value)}
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
             />
-            <label htmlFor="masculino">Masculino</label>
           </div>
           <div>
+            <label>Email:</label>
             <input
-              type="radio"
-              id="feminino"
-              value="Feminino"
-              checked={gender === "Feminino"}
-              onChange={(e) => setGender(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
-            <label htmlFor="feminino">Feminino</label>
           </div>
           <div>
+            <label>Telefone:</label>
             <input
-              type="radio"
-              id="naoInformar"
-              value="Prefiro não responder"
-              checked={gender === "Prefiro não responder"}
-              onChange={(e) => setGender(e.target.value)}
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
             />
-            <label htmlFor="naoInformar">Prefiro não responder</label>
           </div>
-        </div>
-        <button type="submit">Salvar</button>
-      </form>
-      <Link to="/">Voltar para a Home</Link>
+          <div>
+            <label>Cidade:</label>
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Gênero:</label>
+            <div>
+              <input
+                type="radio"
+                id="masculino"
+                value="Masculino"
+                checked={gender === "Masculino"}
+                onChange={(e) => setGender(e.target.value)}
+              />
+              <label htmlFor="masculino">Masculino</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="feminino"
+                value="Feminino"
+                checked={gender === "Feminino"}
+                onChange={(e) => setGender(e.target.value)}
+              />
+              <label htmlFor="feminino">Feminino</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="naoInformar"
+                value="Prefiro não responder"
+                checked={gender === "Prefiro não responder"}
+                onChange={(e) => setGender(e.target.value)}
+              />
+              <label htmlFor="naoInformar">Prefiro não responder</label>
+            </div>
+          </div>
+          <button type="submit">Salvar</button>
+        </form>
+        <Link to="/">Voltar para a Home</Link>
       </div>
     </div>
   );

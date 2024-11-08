@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
+import Profile from "./components/Profile";
 import Psychologist from './components/Psychologist';
 import Cadastro from './components/Register';
 import './styles/App.css';
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/cadastro" element={<Cadastro onRegister={handleRegister} />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/psychologist" element={<Psychologist />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </Router>
     );
