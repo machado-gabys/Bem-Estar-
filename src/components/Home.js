@@ -38,7 +38,7 @@ function Home() {
 
     // Função de logout que redireciona para a página de login
     const handleLogout = () => {
-        navigate('/');
+        navigate('/login');  // Alterando para redirecionar ao login
     };
 
     return (

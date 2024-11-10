@@ -1,22 +1,46 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import '../styles/Profile.css';
 
 function Profile() {
-  const navigate = useNavigate();
-
-  // Estados para armazenar as informações do usuário
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState(""); 
   const [gender, setGender] = useState("");
 
-  // Função de envio do formulário
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser) {
+      setFullName(storedUser.profile.name);
+      setEmail(storedUser.profile.email);
+      setPhone(storedUser.profile.phone);
+      setCity(storedUser.profile.city);
+      setGender(storedUser.profile.gender);
+    }
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Aqui você pode adicionar lógica para salvar as informações do perfil (por exemplo, chamando uma API)
-    console.log({ fullName, email, phone, city, gender });
-    navigate("/"); // Redireciona o usuário após salvar os dados
+
+    //informações pelo localstorage
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      storedUser.profile = {
+        ...storedUser.profile,
+        name: fullName,
+        email,
+        phone,
+        city,
+        gender, 
+      };
+
+      // Salva os dados atualizados no localStorage
+      localStorage.setItem("user", JSON.stringify(storedUser));
+    }
+
+    alert("Informações do perfil atualizadas com sucesso!");
   };
 
   return (
@@ -60,42 +84,48 @@ function Profile() {
               required
             />
           </div>
+
+          {/* Campo de gênero após os campos de texto */}
           <div>
             <label>Gênero:</label>
-            <div>
-              <input
-                type="radio"
-                id="masculino"
-                value="Masculino"
-                checked={gender === "Masculino"}
-                onChange={(e) => setGender(e.target.value)}
-              />
-              <label htmlFor="masculino">Masculino</label>
-            </div>
-            <div>
-              <input
-                type="radio"
-                id="feminino"
-                value="Feminino"
-                checked={gender === "Feminino"}
-                onChange={(e) => setGender(e.target.value)}
-              />
-              <label htmlFor="feminino">Feminino</label>
-            </div>
-            <div>
-              <input
-                type="radio"
-                id="naoInformar"
-                value="Prefiro não responder"
-                checked={gender === "Prefiro não responder"}
-                onChange={(e) => setGender(e.target.value)}
-              />
-              <label htmlFor="naoInformar">Prefiro não responder</label>
+            <div style={{ display: "flex", gap: "15px", marginTop: "10px" }}>
+              <div>
+                <input
+                  type="radio"
+                  id="masculino"
+                  value="masculino"
+                  checked={gender === "masculino"}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label htmlFor="masculino">Masculino</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="feminino"
+                  value="feminino"
+                  checked={gender === "feminino"}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label htmlFor="feminino">Feminino</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="naoInformar"
+                  value="preferNotToAnswer"
+                  checked={gender === "preferNotToAnswer"}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label htmlFor="naoInformar">Prefiro não responder</label>
+              </div>
             </div>
           </div>
-          <button type="submit">Salvar</button>
+
+          <button type="submit" className="save-button">Salvar</button>
         </form>
-        <Link to="/">Voltar para a Home</Link>
+        {/* Link para a página Home */}
+        <Link to="/home">Voltar para a Home</Link>
       </div>
     </div>
   );

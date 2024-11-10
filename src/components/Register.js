@@ -1,27 +1,64 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Register = ({ onRegister }) => {
+const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [userType, setUserType] = useState('paciente');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [birthdate, setBirthdate] = useState('');
+    const [city, setCity] = useState('');
+    const [gender, setGender] = useState('preferNotToAnswer');
     const navigate = useNavigate();
 
     const handleRegister = (e) => {
         e.preventDefault();
 
-        // Verifica se as senhas coincidem
+        if (!username || !password || !confirmPassword || !name || !email || !phone || !birthdate || !city) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
         if (password !== confirmPassword) {
             alert('As senhas não coincidem. Por favor, tente novamente.');
             return;
         }
 
-        // Chama a função para adicionar o usuário
-        onRegister({ username, password, userType });
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
+            alert('Por favor, insira um e-mail válido.');
+            return;
+        }
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        const userExists = users.find(user => user.username === username);
+        if (userExists) {
+            alert('Nome de usuário já existe. Escolha outro.');
+            return;
+        }
+
+        const newUser = {
+            username,
+            password,
+            userType,
+            profile: {
+                name,
+                email,
+                phone,
+                birthdate,
+                city,
+                gender,
+            },
+        };
+
+        users.push(newUser);
+
+        localStorage.setItem('users', JSON.stringify(users));
+
         alert('Cadastro realizado com sucesso!');
-        
-        // Redireciona para a página de login após o cadastro
+
         navigate('/');
     };
 
@@ -48,10 +85,102 @@ const Register = ({ onRegister }) => {
                         value={confirmPassword} 
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                     />
-                    <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-                        <option value="paciente">Paciente</option>
-                        <option value="psicologo">Psicólogo</option>
-                    </select>
+                    
+                    <div>
+                        <label><strong>Tipo de Usuário</strong></label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="userType" 
+                                    value="paciente" 
+                                    checked={userType === 'paciente'} 
+                                    onChange={() => setUserType('paciente')} 
+                                />
+                                Paciente
+                            </label>
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="userType" 
+                                    value="psicologo" 
+                                    checked={userType === 'psicologo'} 
+                                    onChange={() => setUserType('psicologo')} 
+                                />
+                                Psicólogo
+                            </label>
+                        </div>
+                    </div>
+
+                    {/* Campos de Perfil */}
+                    <input 
+                        type="text" 
+                        placeholder="Nome Completo" 
+                        value={name} 
+                        onChange={(e) => setName(e.target.value)} 
+                    />
+                    <input 
+                        type="email" 
+                        placeholder="E-mail" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                    />
+                    <input 
+                        type="text" 
+                        placeholder="Telefone" 
+                        value={phone} 
+                        onChange={(e) => setPhone(e.target.value)} 
+                    />
+                    <input 
+                        type="date" 
+                        placeholder="Data de Nascimento" 
+                        value={birthdate} 
+                        onChange={(e) => setBirthdate(e.target.value)} 
+                    />
+                    <input 
+                        type="text" 
+                        placeholder="Cidade" 
+                        value={city} 
+                        onChange={(e) => setCity(e.target.value)} 
+                    />
+
+                    {/* Opção de Sexo */}
+                    <div>
+                        <label><strong>Opção de Gênero</strong></label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="gender" 
+                                    value="masculino" 
+                                    checked={gender === 'masculino'} 
+                                    onChange={() => setGender('masculino')} 
+                                />
+                                Masculino
+                            </label>
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="gender" 
+                                    value="feminino" 
+                                    checked={gender === 'feminino'} 
+                                    onChange={() => setGender('feminino')} 
+                                />
+                                Feminino
+                            </label>
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="gender" 
+                                    value="preferNotToAnswer" 
+                                    checked={gender === 'preferNotToAnswer'} 
+                                    onChange={() => setGender('preferNotToAnswer')} 
+                                />
+                                Prefiro não responder
+                            </label>
+                        </div>
+                    </div>
+
                     <button type="submit">Cadastrar</button>
                 </form>
                 <p>

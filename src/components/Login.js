@@ -1,23 +1,29 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Login = ({ users }) => {
+const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
-        
-        const user = users.find((user) => user.username === username && user.password === password);
 
-        if (user) {
-            // Redireciona para a página adequada, baseada no tipo de usuário
-            if (user.userType === 'psicologo') {
-                navigate('/psychologist'); // Psicólogo
+        if (!username.trim() || !password.trim()) {
+            alert('Por favor, preencha ambos os campos.');
+            return;
+        }
+        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+        const foundUser = storedUsers.find(user => user.username.trim() === username.trim() && user.password.trim() === password.trim());
+
+        if (foundUser) {
+            localStorage.setItem('loggedInUser', JSON.stringify(foundUser));
+
+            if (foundUser.userType === 'psicologo') {
+                navigate('/psychologist'); //Psicologo
             } else {
-                navigate('/home'); // Paciente
+                navigate('/home'); //Paciente
             }
         } else {
             alert('Usuário ou senha inválidos. Por favor, tente novamente.');
