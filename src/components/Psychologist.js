@@ -1,134 +1,136 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/psychologist.css';
 import Sidebar from './Sidebar';
 
-const Psychologist = () => {
-    const [patients, setPatients] = useState([]);
-    const [patientName, setPatientName] = useState('');
-    const [note, setNote] = useState('');
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [dailyNotes, setDailyNotes] = useState({});
-    const [isModalOpen, setIsModalOpen] = useState(false);
+function Psychologist() {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
+    const sidebarRef = useRef(null);
+    const hamburgerRef = useRef(null);
+    const [notes, setNotes] = useState({});
+    const [currentDate, setCurrentDate] = useState('');
+    const [currentNote, setCurrentNote] = useState('');
     const navigate = useNavigate();
-
-    const addNoteForDate = (date) => {
-        setSelectedDate(date);
-        setIsModalOpen(true);
-    };
-    const addPatient = () => {
-        if (patientName && selectedDate) {
-            const updatedDailyNotes = { ...dailyNotes };
-            if (!updatedDailyNotes[selectedDate]) {
-                updatedDailyNotes[selectedDate] = [];
-            }
-            updatedDailyNotes[selectedDate].push({ patientName, note });
-            setDailyNotes(updatedDailyNotes);
-            setPatientName('');
-            setNote('');
-            setIsModalOpen(false); 
-        }
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setPatientName('');
-        setNote('');
-    };
 
     const toggleSidebar = () => {
         setSidebarVisible(!isSidebarVisible);
     };
 
+    // Fecha o menu quando clicar fora do menu lateral
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target) && 
+                hamburgerRef.current && !hamburgerRef.current.contains(event.target)) {
+                setSidebarVisible(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
     const handleLogout = () => {
-        navigate('/');
+        navigate('/login');
     };
-    const handleExitNote = () => {
-        setIsModalOpen(false);
-        setPatientName('');
-        setNote('');
-    };
-    const renderCalendar = () => {
-        const days = [];
-        for (let day = 1; day <= 30; day++) {
-            const date = `2024-11-${String(day).padStart(2, '0')}`;
-            days.push(
-                <button key={date} onClick={() => addNoteForDate(date)}>
-                    {day}
-                </button>
-            );
+
+    const handleSaveNote = () => {
+        if (currentNote.trim() === '') {
+            alert('A anotação não pode estar vazia!');
+            return;
         }
-        return days;
+
+        setNotes((prevNotes) => ({
+            ...prevNotes,
+            [currentDate]: currentNote,
+        }));
+        setCurrentNote('');
+        setCurrentDate('');
     };
-    const renderNotesForDate = () => {
-        const notesForDate = dailyNotes[selectedDate] || [];
-        return notesForDate.map((entry, index) => (
-            <div key={index}>
-                <strong>Paciente:</strong> {entry.patientName}
-                <br />
-                <strong>Anotação:</strong> {entry.note}
+
+
+    const showModal = (date) => {
+        setCurrentDate(date);
+        setCurrentNote(notes[date] || '');
+    };
+
+    const renderCalendar = () => {
+        return (
+            <div className="calendar">
+                <div className="calendar-header">
+                    <div>Dom</div>
+                    <div>Seg</div>
+                    <div>Ter</div>
+                    <div>Qua</div>
+                    <div>Qui</div>
+                    <div>Sex</div>
+                    <div>Sáb</div>
+                </div>
+                <div className="calendar-body">
+                    {Array.from({ length: 30 }, (_, index) => {
+                        const day = index + 1;
+                        const date = `2024-11-${String(day).padStart(2, '0')}`;
+                        return (
+                            <div
+                                key={date}
+                                className={`calendar-day ${day % 7 === 0 ? 'empty' : ''}`}
+                                onClick={() => showModal(date)} 
+                            >
+                                {day}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-        ));
+        );
     };
 
     return (
         <div className="psychologist-container">
             {/* Menu lateral (Sidebar) */}
-            <div className={`sidebar ${isSidebarVisible ? 'visible' : ''}`}>
-                <Sidebar onLogout={handleLogout} /> {/* Passando a função de logout para o Sidebar */}
+            <div
+                className={`sidebar ${isSidebarVisible ? 'visible' : ''}`}
+                ref={sidebarRef}
+            >
+                <Sidebar onLogout={handleLogout} />
             </div>
 
-            <div className="main-content">
+            <div className="content">
                 {/* Ícone do menu hambúrguer */}
-                <div className="hamburger-icon" onClick={toggleSidebar}>
+                <div
+                    className={`hamburger-icon ${isSidebarVisible ? 'open' : ''}`}
+                    onClick={toggleSidebar}
+                    ref={hamburgerRef}
+                >
                     <span className="line"></span>
                     <span className="line"></span>
                     <span className="line"></span>
                 </div>
 
-                <h2>Página do Psicólogo</h2>
+                <h1>Bem-vindo, Psicólogo</h1>
+
+                <p>Aqui você pode ver suas consultas, adicionar pacientes e anotações.</p>
 
                 {/* Calendário */}
-                <div className="calendar">
-                    <h3>Calendário</h3>
-                    <div className="calendar-grid">
-                        {renderCalendar()}
-                    </div>
-                </div>
+                {renderCalendar()}
 
-                {/* Pop-up Modal para adicionar anotações */}
-                {isModalOpen && (
-                    <div className="modal">
-                        <div className="modal-content">
-                            <span className="close-btn" onClick={closeModal}>&times;</span>
-                            <h3>Anotações para o Dia {selectedDate}</h3>
-                            <input
-                                type="text"
-                                placeholder="Nome do Paciente"
-                                value={patientName}
-                                onChange={(e) => setPatientName(e.target.value)}
-                            />
+                {/* Modal de anotações */}
+                {currentDate && (
+                    <div className="modal-overlay">
+                        <div className="note-modal">
+                            <h3>Adicionar Anotação para {currentDate}</h3>
                             <textarea
-                                placeholder="Anotação"
-                                value={note}
-                                onChange={(e) => setNote(e.target.value)}
+                                value={currentNote}
+                                onChange={(e) => setCurrentNote(e.target.value)}
+                                placeholder="Digite sua anotação aqui..."
                             />
-                            <button onClick={addPatient}>Salvar Anotação</button>
-                            {/* Exibe as anotações salvas para o dia selecionado */}
-                            <div className="saved-notes">
-                                {renderNotesForDate()}
-                            </div>
-                            {/* Botão para sair do modal sem salvar */}
-                            <button onClick={handleExitNote}>Sair sem salvar</button>
+                            <button onClick={handleSaveNote}>Salvar</button>
+                            <button onClick={() => setCurrentDate('')}>Fechar</button>
                         </div>
                     </div>
                 )}
-
-                {/* As anotações não serão mais exibidas na parte inferior da tela */}
             </div>
         </div>
     );
-};
+}
 
 export default Psychologist;

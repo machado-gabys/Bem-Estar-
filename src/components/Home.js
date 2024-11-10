@@ -1,5 +1,4 @@
-// src/components/Home.js
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import Sidebar from './Sidebar';
@@ -10,10 +9,11 @@ function Home() {
     const [isModalVisible, setModalVisible] = useState(false);
     const [currentDate, setCurrentDate] = useState('');
     const [currentNote, setCurrentNote] = useState('');
-
+    
     const navigate = useNavigate();
-
-    // Função para salvar anotações
+    const sidebarRef = useRef(null); 
+    const hamburgerRef = useRef(null);
+    
     const handleSaveNote = () => {
         setNotes(prevNotes => ({
             ...prevNotes,
@@ -26,6 +26,19 @@ function Home() {
         setSidebarVisible(!isSidebarVisible);
     };
 
+    //recolhe o menu quando clicar fora do menu ou do hamburger
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target) && 
+                hamburgerRef.current && !hamburgerRef.current.contains(event.target)) {
+                setSidebarVisible(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
     const showModal = (date) => {
         setCurrentDate(date);
         setCurrentNote(notes[date] || '');
@@ -36,21 +49,27 @@ function Home() {
         setModalVisible(false);
     };
 
-    // Função de logout que redireciona para a página de login
     const handleLogout = () => {
-        navigate('/login');  // Alterando para redirecionar ao login
+        navigate('/login');
     };
 
     return (
         <div className="home-container">
             {/* Menu lateral (Sidebar) */}
-            <div className={`sidebar ${isSidebarVisible ? 'visible' : ''}`}>
+            <div
+                className={`sidebar ${isSidebarVisible ? 'visible' : ''}`}
+                ref={sidebarRef}
+            >
                 <Sidebar onLogout={handleLogout} />
             </div>
 
             <div className="content">
                 {/* Ícone do menu hambúrguer */}
-                <div className="hamburger-icon" onClick={toggleSidebar}>
+                <div
+                    className={`hamburger-icon ${isSidebarVisible ? 'open' : ''}`}
+                    onClick={toggleSidebar}
+                    ref={hamburgerRef}
+                >
                     <span className="line"></span>
                     <span className="line"></span>
                     <span className="line"></span>
@@ -100,7 +119,7 @@ function Home() {
                                 placeholder="Digite sua anotação aqui..."
                             />
                             <button onClick={handleSaveNote}>Salvar</button>
-                            <button onClick={closeModal}>Fechar</button> {/* Botão para fechar o modal */}
+                            <button onClick={closeModal}>Fechar</button>
                         </div>
                     </div>
                 )}

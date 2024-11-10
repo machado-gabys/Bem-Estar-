@@ -1,39 +1,78 @@
-/* Sidebar Container */
+/* Hamburger Menu */
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hamburger-icon.open .line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-icon.open .line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-icon.open .line:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.hamburger-icon .line {
+  background-color: #6a1b9a;
+  height: 4px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #6a1b9a;
+  color: white;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar.visible {
+  left: 0;
+}
+
 .sidebar-container {
-    width: 250px;
-    height: 100%;
-    background-color: #6a1b9a;
-    color: white;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .sidebar-item {
-    margin-bottom: 20px;
-  }
-  
-  .sidebar-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .sidebar-link:hover {
-    background-color: #9c4dcc;
-  }
-  
-  /* Ícones */
-  .sidebar-icon {
-    margin-right: 10px;
-    font-size: 20px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-family: 'Arial', sans-serif;
+  height: 100%;
+}
+
+.sidebar-item {
+  margin-bottom: 20px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #9c4dcc;
+}
+
+.sidebar-icon {
+  margin-right: 10px;
+  font-size: 20px;
+}
