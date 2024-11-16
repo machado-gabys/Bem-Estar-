@@ -33,6 +33,7 @@ const Login = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
+                <h1>Bem vindo ao seu BemEstar+</h1>
                 <h2>Login</h2>
                 <form onSubmit={handleLogin}>
                     <input 

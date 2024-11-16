@@ -12,7 +12,10 @@ const Register = () => {
     const [birthdate, setBirthdate] = useState('');
     const [city, setCity] = useState('');
     const [gender, setGender] = useState('preferNotToAnswer');
+    const [selectedPsychologist, setSelectedPsychologist] = useState('');
     const navigate = useNavigate();
+
+    const psychologists = JSON.parse(localStorage.getItem('users'))?.filter(user => user.userType === 'psicologo') || [];
 
     const handleRegister = (e) => {
         e.preventDefault();
@@ -31,8 +34,13 @@ const Register = () => {
             alert('Por favor, insira um e-mail válido.');
             return;
         }
-        const users = JSON.parse(localStorage.getItem('users')) || [];
 
+        if (userType === 'paciente' && !selectedPsychologist) {
+            alert('Por favor, selecione um psicólogo.');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users')) || [];
         const userExists = users.find(user => user.username === username);
         if (userExists) {
             alert('Nome de usuário já existe. Escolha outro.');
@@ -51,14 +59,23 @@ const Register = () => {
                 city,
                 gender,
             },
+            assignedPsychologist: userType === 'paciente' ? selectedPsychologist : null,
         };
 
-        users.push(newUser);
+        if (userType === 'paciente') {
+            const psychologistIndex = users.findIndex(user => user.username === selectedPsychologist);
+            if (psychologistIndex !== -1) {
+                if (!users[psychologistIndex].assignedPatients) {
+                    users[psychologistIndex].assignedPatients = [];
+                }
+                users[psychologistIndex].assignedPatients.push(newUser.username);
+            }
+        }
 
+        users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
 
         alert('Cadastro realizado com sucesso!');
-
         navigate('/');
     };
 
@@ -112,7 +129,23 @@ const Register = () => {
                         </div>
                     </div>
 
-                    {/* Campos de Perfil */}
+                    {userType === 'paciente' && (
+                        <div>
+                            <label><strong>Selecione um Psicólogo</strong></label>
+                            <select
+                                value={selectedPsychologist}
+                                onChange={(e) => setSelectedPsychologist(e.target.value)}
+                            >
+                                <option value="">Escolha um psicólogo</option>
+                                {psychologists.map((psychologist, index) => (
+                                    <option key={index} value={psychologist.username}>
+                                        {psychologist.profile?.name || psychologist.username}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
                     <input 
                         type="text" 
                         placeholder="Nome Completo" 
@@ -144,7 +177,6 @@ const Register = () => {
                         onChange={(e) => setCity(e.target.value)} 
                     />
 
-                    {/* Opção de Sexo */}
                     <div>
                         <label><strong>Opção de Gênero</strong></label>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
