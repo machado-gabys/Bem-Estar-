@@ -71,7 +71,7 @@ const Register = () => {
 
             if (response.status === 201) {
                 alert('Cadastro realizado com sucesso!');
-                navigate('/');
+                navigate('/'); // Redireciona para a página inicial após o registro bem-sucedido
             }
         } catch (error) {
             console.error('Erro ao cadastrar:', error);

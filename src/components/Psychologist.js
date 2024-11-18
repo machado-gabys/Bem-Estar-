@@ -7,11 +7,7 @@ function Psychologist() {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
     const sidebarRef = useRef(null);
     const hamburgerRef = useRef(null);
-    const [patients, setPatients] = useState([
-        { id: 1, name: 'João Silva', notes: {} },
-        { id: 2, name: 'Maria Oliveira', notes: {} },
-    ]);
-    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [notes, setNotes] = useState({});
     const [currentDate, setCurrentDate] = useState('');
     const [currentNote, setCurrentNote] = useState('');
     const navigate = useNavigate();
@@ -20,14 +16,11 @@ function Psychologist() {
         setSidebarVisible(!isSidebarVisible);
     };
 
+    // Fecha o menu quando clicar fora do menu lateral
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (
-                sidebarRef.current &&
-                !sidebarRef.current.contains(event.target) &&
-                hamburgerRef.current &&
-                !hamburgerRef.current.contains(event.target)
-            ) {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target) && 
+                hamburgerRef.current && !hamburgerRef.current.contains(event.target)) {
                 setSidebarVisible(false);
             }
         };
@@ -46,27 +39,18 @@ function Psychologist() {
             return;
         }
 
-        // Atualiza as notas do paciente selecionado
-        setPatients((prevPatients) =>
-            prevPatients.map((patient) =>
-                patient.id === selectedPatient.id
-                    ? {
-                          ...patient,
-                          notes: {
-                              ...patient.notes,
-                              [currentDate]: currentNote,
-                          },
-                      }
-                    : patient
-            )
-        );
+        setNotes((prevNotes) => ({
+            ...prevNotes,
+            [currentDate]: currentNote,
+        }));
         setCurrentNote('');
         setCurrentDate('');
     };
 
+
     const showModal = (date) => {
         setCurrentDate(date);
-        setCurrentNote(selectedPatient.notes[date] || '');
+        setCurrentNote(notes[date] || '');
     };
 
     const renderCalendar = () => {
@@ -89,7 +73,7 @@ function Psychologist() {
                             <div
                                 key={date}
                                 className={`calendar-day ${day % 7 === 0 ? 'empty' : ''}`}
-                                onClick={() => showModal(date)}
+                                onClick={() => showModal(date)} 
                             >
                                 {day}
                             </div>
@@ -99,21 +83,6 @@ function Psychologist() {
             </div>
         );
     };
-
-    const renderPatientList = () => (
-        <div className="patient-list">
-            <h2>Pacientes</h2>
-            {patients.map((patient) => (
-                <div
-                    key={patient.id}
-                    className="patient-item"
-                    onClick={() => setSelectedPatient(patient)}
-                >
-                    {patient.name}
-                </div>
-            ))}
-        </div>
-    );
 
     return (
         <div className="psychologist-container">
@@ -139,25 +108,10 @@ function Psychologist() {
 
                 <h1>Bem-vindo, Psicólogo</h1>
 
-                <p>
-                    Clique em um paciente para visualizar o calendário e as anotações.
-                </p>
+                <p>Aqui você pode ver suas consultas, adicionar pacientes e anotações.</p>
 
-                {/* Renderiza lista de pacientes ou calendário do paciente */}
-                {!selectedPatient ? (
-                    renderPatientList()
-                ) : (
-                    <>
-                        <h2>Calendário de {selectedPatient.name}</h2>
-                        {renderCalendar()}
-                        <button
-                            className="back-button"
-                            onClick={() => setSelectedPatient(null)}
-                        >
-                            Voltar à lista de pacientes
-                        </button>
-                    </>
-                )}
+                {/* Calendário */}
+                {renderCalendar()}
 
                 {/* Modal de anotações */}
                 {currentDate && (
@@ -170,9 +124,7 @@ function Psychologist() {
                                 placeholder="Digite sua anotação aqui..."
                             />
                             <button onClick={handleSaveNote}>Salvar</button>
-                            <button onClick={() => setCurrentDate('')}>
-                                Fechar
-                            </button>
+                            <button onClick={() => setCurrentDate('')}>Fechar</button>
                         </div>
                     </div>
                 )}
