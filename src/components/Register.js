@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    // Estados para armazenar os valores dos campos de entrada
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,52 +16,73 @@ const Register = () => {
     const [gender, setGender] = useState('preferNotToAnswer');
     const navigate = useNavigate();
 
-    const handleRegister = (e) => {
+    // Função para lidar com o registro do usuário
+    const handleRegister = async (e) => {
         e.preventDefault();
 
+        // Verifica se todos os campos estão preenchidos
         if (!username || !password || !confirmPassword || !name || !email || !phone || !birthdate || !city) {
             alert('Por favor, preencha todos os campos.');
             return;
         }
+
+        // Verifica se as senhas coincidem
         if (password !== confirmPassword) {
             alert('As senhas não coincidem. Por favor, tente novamente.');
             return;
         }
 
+        // Valida o formato do e-mail
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailPattern.test(email)) {
             alert('Por favor, insira um e-mail válido.');
             return;
         }
-        const users = JSON.parse(localStorage.getItem('users')) || [];
 
-        const userExists = users.find(user => user.username === username);
-        if (userExists) {
-            alert('Nome de usuário já existe. Escolha outro.');
+        // Validação de telefone (apenas números e tamanho mínimo de 10)
+        const phonePattern = /^[0-9]{10,11}$/;
+        if (!phonePattern.test(phone)) {
+            alert('Por favor, insira um telefone válido.');
             return;
         }
 
+        // Validação da senha (mínimo de 6 caracteres)
+        if (password.length < 6) {
+            alert('A senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+
+        // Criação do objeto do usuário para enviar para o backend
         const newUser = {
             username,
             password,
             userType,
-            profile: {
-                name,
-                email,
-                phone,
-                birthdate,
-                city,
-                gender,
-            },
+            name,
+            email,
+            phone,
+            birthdate,
+            city,
+            gender,
         };
 
-        users.push(newUser);
+        try {
+            // Requisição POST para o backend usando axios
+            const response = await axios.post('http://localhost:5000/api/register', newUser);
 
-        localStorage.setItem('users', JSON.stringify(users));
+            if (response.status === 201) {
+                alert('Cadastro realizado com sucesso!');
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Erro ao cadastrar:', error);
 
-        alert('Cadastro realizado com sucesso!');
-
-        navigate('/');
+            // Caso o backend retorne uma mensagem de erro específica
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(`Erro ao cadastrar: ${error.response.data.message}`);
+            } else {
+                alert('Erro ao cadastrar. Por favor, tente novamente mais tarde.');
+            }
+        }
     };
 
     return (
@@ -67,45 +90,46 @@ const Register = () => {
             <div className="auth-card">
                 <h2>Cadastro</h2>
                 <form onSubmit={handleRegister}>
-                    <input 
-                        type="text" 
-                        placeholder="Usuário" 
-                        value={username} 
-                        onChange={(e) => setUsername(e.target.value)} 
+                    <input
+                        type="text"
+                        placeholder="Usuário"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
-                    <input 
-                        type="password" 
-                        placeholder="Senha" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
+                    <input
+                        type="password"
+                        placeholder="Senha"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-                    <input 
-                        type="password" 
-                        placeholder="Confirme a Senha" 
-                        value={confirmPassword} 
-                        onChange={(e) => setConfirmPassword(e.target.value)} 
+                    <input
+                        type="password"
+                        placeholder="Confirme a Senha"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                     />
-                    
+
+                    {/* Seção para selecionar o tipo de usuário */}
                     <div>
                         <label><strong>Tipo de Usuário</strong></label>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
                             <label>
-                                <input 
-                                    type="radio" 
-                                    name="userType" 
-                                    value="paciente" 
-                                    checked={userType === 'paciente'} 
-                                    onChange={() => setUserType('paciente')} 
+                                <input
+                                    type="radio"
+                                    name="userType"
+                                    value="paciente"
+                                    checked={userType === 'paciente'}
+                                    onChange={() => setUserType('paciente')}
                                 />
                                 Paciente
                             </label>
                             <label>
-                                <input 
-                                    type="radio" 
-                                    name="userType" 
-                                    value="psicologo" 
-                                    checked={userType === 'psicologo'} 
-                                    onChange={() => setUserType('psicologo')} 
+                                <input
+                                    type="radio"
+                                    name="userType"
+                                    value="psicologo"
+                                    checked={userType === 'psicologo'}
+                                    onChange={() => setUserType('psicologo')}
                                 />
                                 Psicólogo
                             </label>
@@ -113,68 +137,68 @@ const Register = () => {
                     </div>
 
                     {/* Campos de Perfil */}
-                    <input 
-                        type="text" 
-                        placeholder="Nome Completo" 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)} 
+                    <input
+                        type="text"
+                        placeholder="Nome Completo"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
-                    <input 
-                        type="email" 
-                        placeholder="E-mail" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
+                    <input
+                        type="email"
+                        placeholder="E-mail"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
-                    <input 
-                        type="text" 
-                        placeholder="Telefone" 
-                        value={phone} 
-                        onChange={(e) => setPhone(e.target.value)} 
+                    <input
+                        type="text"
+                        placeholder="Telefone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
                     />
-                    <input 
-                        type="date" 
-                        placeholder="Data de Nascimento" 
-                        value={birthdate} 
-                        onChange={(e) => setBirthdate(e.target.value)} 
+                    <input
+                        type="date"
+                        placeholder="Data de Nascimento"
+                        value={birthdate}
+                        onChange={(e) => setBirthdate(e.target.value)}
                     />
-                    <input 
-                        type="text" 
-                        placeholder="Cidade" 
-                        value={city} 
-                        onChange={(e) => setCity(e.target.value)} 
+                    <input
+                        type="text"
+                        placeholder="Cidade"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
                     />
 
-                    {/* Opção de Sexo */}
+                    {/* Opção de Gênero */}
                     <div>
                         <label><strong>Opção de Gênero</strong></label>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
                             <label>
-                                <input 
-                                    type="radio" 
-                                    name="gender" 
-                                    value="masculino" 
-                                    checked={gender === 'masculino'} 
-                                    onChange={() => setGender('masculino')} 
+                                <input
+                                    type="radio"
+                                    name="gender"
+                                    value="masculino"
+                                    checked={gender === 'masculino'}
+                                    onChange={() => setGender('masculino')}
                                 />
                                 Masculino
                             </label>
                             <label>
-                                <input 
-                                    type="radio" 
-                                    name="gender" 
-                                    value="feminino" 
-                                    checked={gender === 'feminino'} 
-                                    onChange={() => setGender('feminino')} 
+                                <input
+                                    type="radio"
+                                    name="gender"
+                                    value="feminino"
+                                    checked={gender === 'feminino'}
+                                    onChange={() => setGender('feminino')}
                                 />
                                 Feminino
                             </label>
                             <label>
-                                <input 
-                                    type="radio" 
-                                    name="gender" 
-                                    value="preferNotToAnswer" 
-                                    checked={gender === 'preferNotToAnswer'} 
-                                    onChange={() => setGender('preferNotToAnswer')} 
+                                <input
+                                    type="radio"
+                                    name="gender"
+                                    value="preferNotToAnswer"
+                                    checked={gender === 'preferNotToAnswer'}
+                                    onChange={() => setGender('preferNotToAnswer')}
                                 />
                                 Prefiro não responder
                             </label>

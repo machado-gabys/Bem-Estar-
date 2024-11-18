@@ -6,27 +6,44 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
         if (!username.trim() || !password.trim()) {
             alert('Por favor, preencha ambos os campos.');
             return;
         }
-        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
 
-        const foundUser = storedUsers.find(user => user.username.trim() === username.trim() && user.password.trim() === password.trim());
+        try {
+            // Fazer requisição para o backend para validar o login
+            const response = await fetch('http://localhost:5000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
 
-        if (foundUser) {
-            localStorage.setItem('loggedInUser', JSON.stringify(foundUser));
+            const data = await response.json();
+            console.log('Resposta do backend:', data); // Log para ver a resposta do backend
 
-            if (foundUser.userType === 'psicologo') {
-                navigate('/psychologist'); //Psicologo
+            if (response.ok) {
+                // Login bem-sucedido, redirecionar com base no tipo de usuário
+                const { user } = data;
+                localStorage.setItem('loggedInUser', JSON.stringify(user));
+
+                if (user.userType === 'psicologo') {
+                    navigate('/psychologist'); // Psicólogo
+                } else {
+                    navigate('/home'); // Paciente
+                }
             } else {
-                navigate('/home'); //Paciente
+                // Se o login falhar, exibir a mensagem de erro
+                alert(data.message);
             }
-        } else {
-            alert('Usuário ou senha inválidos. Por favor, tente novamente.');
+        } catch (error) {
+            console.error('Erro ao fazer login:', error);
+            alert('Erro ao fazer login. Por favor, tente novamente mais tarde.');
         }
     };
 
