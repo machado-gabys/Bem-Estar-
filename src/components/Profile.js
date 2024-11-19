@@ -10,34 +10,31 @@ function Profile() {
   const [gender, setGender] = useState("");
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = JSON.parse(localStorage.getItem("loggedInUser")); // Mudando para 'loggedInUser'
 
     if (storedUser) {
-      setFullName(storedUser.profile.name);
-      setEmail(storedUser.profile.email);
-      setPhone(storedUser.profile.phone);
-      setCity(storedUser.profile.city);
-      setGender(storedUser.profile.gender);
+      setFullName(storedUser.name); // Alterado para o nome vindo de loggedInUser
+      setEmail(storedUser.email);
+      setPhone(storedUser.phone);
+      setCity(storedUser.city);
+      setGender(storedUser.gender);
     }
   }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    //informações pelo localstorage
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    // Pega o usuário armazenado no localStorage
+    const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (storedUser) {
-      storedUser.profile = {
-        ...storedUser.profile,
-        name: fullName,
-        email,
-        phone,
-        city,
-        gender, 
-      };
+      storedUser.name = fullName;
+      storedUser.email = email;
+      storedUser.phone = phone;
+      storedUser.city = city;
+      storedUser.gender = gender;
 
-      // Salva os dados atualizados no localStorage
-      localStorage.setItem("user", JSON.stringify(storedUser));
+      // Atualiza as informações no localStorage
+      localStorage.setItem("loggedInUser", JSON.stringify(storedUser));
     }
 
     alert("Informações do perfil atualizadas com sucesso!");

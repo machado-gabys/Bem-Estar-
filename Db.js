@@ -69,10 +69,36 @@ async function getUsers() {
     }
 }
 
+// Função para obter o perfil de um usuário pelo ID
+async function getUserProfile(id) {
+    const client = createClient();
+    try {
+        await client.connect();
+        console.log('Conectado ao banco de dados para obter perfil do usuário');
+
+        // Consulta SQL para obter os dados do usuário pelo ID (sem a senha)
+        const query = 'SELECT id, username, name, email, role, phone, birthdate, city, gender FROM users WHERE id = $1';
+        const res = await client.query(query, [id]);
+
+        if (res.rows.length === 0) {
+            throw new Error('Usuário não encontrado');
+        }
+
+        // Retorna os dados do usuário, sem a senha
+        return res.rows[0];
+    } catch (err) {
+        console.error('Erro ao obter perfil do usuário:', err);
+        throw new Error('Erro ao obter perfil do usuário');
+    } finally {
+        await client.end(); // Fecha a conexão ao final
+    }
+}
+
 // Exporta as funções para uso em outros arquivos
 module.exports = {
     addUser,
     getUsers,
+    getUserProfile,  // Função adicionada para obter o perfil do usuário
     createClient,
 };
 
